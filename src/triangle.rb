@@ -17,10 +17,10 @@ def triangle(a, b, c)
   # WRITE THIS CODE
   #--
   a, b, c = [a, b, c].sort
-  fail TriangleError if (a+b) <= c
+  raise TriangleError if (a + b) <= c
+
   sides = [a, b, c].uniq
-  [nil, :equilateral, :isosceles, :scalene][sides.size]
-  #++
+  %i[equilateral isosceles scalene][sides.size - 1]
 end
 
 # Error class used in part 2.  No need to change this code.

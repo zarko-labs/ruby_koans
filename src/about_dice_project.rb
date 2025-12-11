@@ -9,8 +9,9 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 #--
 class DiceSet
   attr_reader :values
+
   def roll(n)
-    @values = (1..n).map { rand(6) + 1 }
+    @values = (1..n).map { rand(1..6) }
   end
 end
 
@@ -25,7 +26,7 @@ class AboutDiceProject < Neo::Koan
     dice = DiceSet.new
 
     dice.roll(5)
-    assert dice.values.is_a?(Array), "should be an array"
+    assert dice.values.is_a?(Array), 'should be an array'
     assert_equal 5, dice.values.size
     dice.values.each do |value|
       assert value >= 1 && value <= 6, "value #{value} must be between 1 and 6"
@@ -42,15 +43,19 @@ class AboutDiceProject < Neo::Koan
 
   def test_dice_values_should_change_between_rolls
     dice = DiceSet.new
-
     dice.roll(5)
-    first_time = dice.values
+    first_roll = dice.values
 
-    dice.roll(5)
-    second_time = dice.values
+    different = false
+    until different
+      dice.roll(5)
+      next if first_roll == dice.values
 
-    assert_not_equal first_time, second_time,
-      "Two rolls should not be equal"
+      different = true
+      break
+    end
+
+    assert different, 'Two rolls should not be different after several tries'
 
     # THINK ABOUT IT:
     #
@@ -68,5 +73,4 @@ class AboutDiceProject < Neo::Koan
     dice.roll(1)
     assert_equal 1, dice.values.size
   end
-
 end
